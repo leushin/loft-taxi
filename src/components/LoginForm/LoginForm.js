@@ -39,14 +39,15 @@ const renderTextField = ({ type, name, label, placeholder, input, meta: { touche
 
 class LoginForm extends Component {
     handleSubmit = (values) => {
-        console.log('values', values);
+        const { login } = this.props;
+        login();
     };
 
     render () {
         const { isAuthorized, classes, handleSubmit } = this.props;
             
         return isAuthorized ? (
-            <Redirect to='/app' />
+            <Redirect to='/map' />
         ) : (
             <Grid container spacing={0} className={classes.container} alignItems='center' justify='center'>
                 <Grid item xs={4} >
