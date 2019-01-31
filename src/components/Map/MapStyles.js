@@ -4,6 +4,6 @@ const styles = {
         height: '100%',
         zIndex: '9999'
     }
-}
+};
 
 export default styles;

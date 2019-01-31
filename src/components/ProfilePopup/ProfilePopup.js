@@ -1,0 +1,29 @@
+import React, { PureComponent } from 'react';
+import { Link } from 'react-router-dom';
+import { withStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import styles from './ProfilePopupStyles';
+
+class ProfilePopup extends PureComponent {
+	render() {
+		const { classes, header, body, btnText, linkTo } = this.props;
+
+		return (
+			<Grid container spacing={24} >
+				<Grid item xs={12} className={`${classes.alignCenter} ${classes.fieldAlign}`}>
+					<Typography variant='h4'>{header}</Typography>
+				</Grid>
+				<Grid item xs={12}>
+					<Typography variant='body1'>{body}</Typography>
+				</Grid>
+				<Grid item xs={12} className={`${classes.alignLeft} ${classes.fieldAlign}`}>
+					<Button component={Link} variant="outlined" color="primary" to={linkTo}>{btnText}</Button>
+				</Grid>
+			</Grid>
+		)
+	}
+}
+
+export default withStyles(styles)(ProfilePopup);

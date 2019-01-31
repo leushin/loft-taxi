@@ -1,16 +1,76 @@
-import React, { Component, Fragment } from 'react';
-import Grid from '@material-ui/core/Grid';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import mapboxgl from 'mapbox-gl';
+import {withStyles} from "@material-ui/core";
+import { getCoords, getIsOrderMade } from '../../modules/Map';
+import styles from "./MapStyles";
 
 class Map extends Component {
+    mapContainer = React.createRef();
+    map = null;
+
+    componentDidMount() {
+        mapboxgl.accessToken = 'pk.eyJ1IjoicmFpdG8ta3VuIiwiYSI6ImNqcmt2endkeDAyMmk0OW80bDZzY2EzbXYifQ.A7CSFZjX6CDaAQrA2H4QbQ';
+        this.map = new mapboxgl.Map({
+            container: this.mapContainer.current,
+            style: 'mapbox://styles/mapbox/streets-v9',
+            center: [30.3, 59.8],
+            zoom: 15
+        });
+    };
+
+    componentDidUpdate(prevProps) {
+        const { isOrderMade, orderCoords } = this.props;
+
+        if (!isOrderMade && this.map.getLayer('route')){
+            this.map.removeLayer('route');
+            this.map.removeSource('route');
+        }
+
+        if (isOrderMade && orderCoords && orderCoords.length > 0) {
+            if(prevProps.orderCoords !== orderCoords) this.renderRoute();
+        }
+    };
+
+    renderRoute = () => {
+        const { orderCoords } = this.props;
+        this.map.addLayer({
+            id: 'route',
+            type: 'line',
+            source: {
+                type: 'geojson',
+                data: {
+                    type: 'Feature',
+                    properties: { color: '#F7455D' },
+                    geometry: {
+                        type: 'LineString',
+                        coordinates: orderCoords
+                    }
+                }
+            },
+            paint: {
+                'line-width': 8,
+                'line-color': ['get', 'color']
+            }
+        });
+        this.map.flyTo({ center: orderCoords[0] });
+    };
+
+    componentWillUnmount() {
+        this.map.remove();
+    }
+
     render() {
-        return (
-            <Grid container spacing={0} alignItems='center' justify='center'>
-                <Grid item xs={9}>
-                    ProfileForm
-                </Grid>
-            </Grid>
-        )
+        const { classes } = this.props;
+        return <div className={classes.container} ref={this.mapContainer} />
     }
 }
 
-export default Map;
+const mapStateToProps = state => ({
+    orderCoords: getCoords(state),
+    isOrderMade: getIsOrderMade(state)
+});
+
+const mapDispatchToProps = null;
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Map));

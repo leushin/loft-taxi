@@ -6,7 +6,7 @@ import { getIsAuthorized } from '../../modules/Auth';
 class PrivateRoute extends PureComponent {
     renderRoute = props => {
         const { isAuthorized, component: Component } = this.props;
-        return isAuthorized ? <Component {...props} /> : <Redirect to="/" />;
+        return isAuthorized ? <Component {...props} /> : <Redirect to='/login' />;
     };
     
     render() {

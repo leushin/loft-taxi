@@ -8,7 +8,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
+import { renderTextField } from '../../helpers';
 import styles from './LoginFormStyles.js'
 import { withStyles } from '@material-ui/core/styles';
 
@@ -23,22 +23,8 @@ const validate = ({ login, password }) => {
     return errors;
 };
 
-const renderTextField = ({ type, name, label, placeholder, input, meta: { touched, invalid, error }, ...custom }) => (
-    <TextField
-        type={type}
-        name={name}
-        label={label}
-        placeholder={placeholder}
-        error={touched && error && true}
-        helperText={touched && error}
-        margin='none'
-        {...input}
-        {...custom}
-    />
-);
-
 class LoginForm extends Component {
-    handleSubmit = (values) => {
+    handleSubmit = () => {
         const { login } = this.props;
         login();
     };
