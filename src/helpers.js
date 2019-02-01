@@ -1,4 +1,4 @@
-import TextField from "./components/LoginForm/LoginForm";
+import TextField from '@material-ui/core/TextField';
 import React from "react";
 
 export const renderTextField = ({ type, name, label, placeholder, input, meta: { touched, invalid, error }, ...custom }) => (

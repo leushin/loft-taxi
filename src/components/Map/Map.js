@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import mapboxgl from 'mapbox-gl';
 import {withStyles} from "@material-ui/core";
-import { getCoords, getIsOrderMade } from '../../modules/Map';
-import styles from "./MapStyles";
+import { getCoords, getOrderComplete } from '../../modules/Map';
+import Order from '../Order';
+import styles from './MapStyles';
 
 class Map extends Component {
     mapContainer = React.createRef();
@@ -20,14 +21,14 @@ class Map extends Component {
     };
 
     componentDidUpdate(prevProps) {
-        const { isOrderMade, orderCoords } = this.props;
+        const { orderComplete, orderCoords } = this.props;
 
-        if (!isOrderMade && this.map.getLayer('route')){
+        if (!orderComplete && this.map.getLayer('route')){
             this.map.removeLayer('route');
             this.map.removeSource('route');
         }
 
-        if (isOrderMade && orderCoords && orderCoords.length > 0) {
+        if (orderComplete && orderCoords && orderCoords.length > 0) {
             if(prevProps.orderCoords !== orderCoords) this.renderRoute();
         }
     };
@@ -62,13 +63,18 @@ class Map extends Component {
 
     render() {
         const { classes } = this.props;
-        return <div className={classes.container} ref={this.mapContainer} />
+        return (
+            <Fragment>
+                <Order />
+                <div className={classes.container} ref={this.mapContainer} />
+            </Fragment>
+        );
     }
 }
 
 const mapStateToProps = state => ({
     orderCoords: getCoords(state),
-    isOrderMade: getIsOrderMade(state)
+    orderComplete: getOrderComplete(state)
 });
 
 const mapDispatchToProps = null;

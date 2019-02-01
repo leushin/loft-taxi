@@ -9,6 +9,4 @@ const isAuthorized = handleActions({
 
 export default combineReducers({
     isAuthorized,
-})
-
-export const getIsAuthorized = state => state.auth.isAuthorized;
+});

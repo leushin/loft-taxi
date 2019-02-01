@@ -14,6 +14,29 @@ import ProfilePopup from '../ProfilePopup';
 import styles from './ProfileStyles';
 
 class Profile extends Component {
+    state = {
+        isUpdated: false
+    }
+
+    requiredFields = ['cardName', 'cardNumber', 'expDate', 'cvv'];
+
+    handleSubmit = values => {
+        const { handleProfileSubmit } = this.props;
+        this.setState({
+            isUpdated: true
+        });      
+        handleProfileSubmit({ ...values });
+    }
+
+    handleClear = () => {
+        const { handleProfileClear, change } = this.props;
+        this.setState({
+            isUpdated: false
+        });
+        this.requiredFields.forEach(field => change(field, ''))
+        handleProfileClear();
+    }
+
     renderForm = () => {
         const { classes, handleSubmit } = this.props;
 

@@ -3,6 +3,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { login, getIsAuthorized } from '../../modules/Auth';
+import { testAuth } from '../../modules/Auth/actions';
 import { Field, reduxForm } from 'redux-form';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -12,21 +13,21 @@ import { renderTextField } from '../../helpers';
 import styles from './LoginFormStyles.js'
 import { withStyles } from '@material-ui/core/styles';
 
-const validate = ({ login, password }) => {
+const validate = ({ username, password }) => {
     const errors = {};
-    if (login !== 'test@test.com') {
-        errors.login = 'Неверный логин';
-    }
-    if (password !== '123123') {
-        errors.password = 'Неправильный пароль';
-    }
+    if (!username){
+        errors.username = 'Надо указать логин'
+    } else if(!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(username)){
+        errors.username = 'Тут нужен ваш e-mail'
+    };
+    if(!password) errors.password = 'Надо указать пароль';
     return errors;
 };
 
 class LoginForm extends Component {
-    handleSubmit = () => {
-        const { login } = this.props;
-        login();
+    handleSubmit = (values) => {
+        const { testAuth } = this.props;
+        testAuth(values);
     };
 
     render () {
@@ -44,7 +45,7 @@ class LoginForm extends Component {
                             </Grid>
                             <Grid item xs={12} className={`${classes.alignLeft} ${classes.fieldAlign}`}>
                                 <Field
-                                    name="login"
+                                    name="username"
                                     label="Имя пользователя *"
                                     placeholder="Имя пользователя"
                                     type='text'
@@ -77,7 +78,7 @@ const mapStateToProps = state => ({
     isAuthorized: getIsAuthorized(state),
 });
 
-const mapDispatchToProps = { login };
+const mapDispatchToProps = { login, testAuth };
 
 export default compose(
     connect(mapStateToProps, mapDispatchToProps),

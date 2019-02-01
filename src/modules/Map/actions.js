@@ -1,7 +1,7 @@
 import { createAction } from 'redux-actions';
 
-export const fetchCoordsRequest = createAction('MAP/FETCH_ADDRESSES_REQUEST');
-export const fetchCoordsSuccess = createAction('MAP/FETCH_ADDRESSES_SUCCESS');
-export const fetchCoordsFailure = createAction('MAP/FETCH_ADDRESSES_FAILURE');
+export const fetchCoordsRequest = createAction('MAP/FETCH_COORDS_REQUEST');
+export const fetchCoordsSuccess = createAction('MAP/FETCH_COORDS_SUCCESS');
+export const fetchCoordsFailure = createAction('MAP/FETCH_COORDS_FAILURE');
 
-export const isOrderSet = createAction('MAP/IS_ORDER_SET');
+export const setOrderComplete = createAction('MAP/SET_ORDER_COMPLETE');
