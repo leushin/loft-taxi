@@ -3,5 +3,5 @@ export const checkAuth = ({username, password}) => {
         method: 'GET',
         mode: 'cors'
     })
-    .then(response => response.json())
+        .then(response => response.json())
 };

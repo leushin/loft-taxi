@@ -8,43 +8,43 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import MenuItem from '@material-ui/core/MenuItem';
-import { fetchAddressesRequest } from '../../modules/Addresses';
-import { getIsLoadingAddresses, getErrorText, getAddresses } from '../../modules/Addresses/selectors';
-import { fetchCoordsRequest, setOrderComplete  } from '../../modules/Map';
-import { getIsLoadingCoords, getCoordsError } from '../../modules/Map/selectors';
+import { fetchCoordsRequest, setIsOrderMade, getIsLoadingCoords, getCoordsError } from '../../modules/Coords';
+import { fetchAddressesRequest, getIsLoadingAddresses, getLoadErrorText, getMyAddresses } from '../../modules/LoadAddresses';
 
 class OrderForm extends Component {
     state = {
         address1: '',
         address2: '',
-    }
+    };
 
     handleChange = event => {
         this.setState({ [event.target.name]: event.target.value });
     };
 
     handleButtonClick = () => {
-        const { fetchCoordsRequest, setOrderComplete } = this.props;
+        const { fetchCoordsRequest, setIsOrderMade } = this.props;
         const { address1, address2 } =this.state;
         
-        if(address1 && address2) fetchCoordsRequest({address1, address2});
-        setOrderComplete(true);
+        if (address1 && address2) {
+            fetchCoordsRequest({address1, address2});
+        }
+        setIsOrderMade(true);
         this.setState({
             ...this.state, 
             address1: '',
             address2: '',
         })
-    }
+    };
 
-    componentDidMount(){
+    componentDidMount() {
         const { fetchAddressesRequest } = this.props;
         fetchAddressesRequest();
-    }
+    };
 
-    render(){
-        const { classes, isLoadingAddresses, errorText, addresses, isLoadingCoords, errorCoords } = this.props;
-        console.log(addresses);
+    render() {
+        const { classes, isLoadingAddresses, errorText, MyAddresses, isLoadingCoords, errorCoords } = this.props;
         const { address1, address2 } = this.state;
+
         return (
             <Grid container spacing={24} >
                 <Grid item xs={12} className={`${classes.alignCenter} ${classes.fieldAlign}`}>
@@ -71,7 +71,6 @@ class OrderForm extends Component {
                         <Typography variant='body2'>{errorCoords}</Typography>
                     </Grid>
                 )}
-
                 <Grid item xs={12}>
                     <TextField
                         id="address-1"
@@ -85,10 +84,10 @@ class OrderForm extends Component {
                     >
                         <MenuItem value=''>Выберите пункт отправления</MenuItem>
                         {
-                            addresses.map(address => (
+                            MyAddresses.map(address => (
                                 address2 === address
-                                ? address
-                                : <MenuItem key={address} value={address}>{address}</MenuItem>
+                                    ? address
+                                    : <MenuItem key={address} value={address}>{address}</MenuItem>
                             ))
                         }
                     </TextField>
@@ -106,18 +105,18 @@ class OrderForm extends Component {
                     >
                         <MenuItem value='' >Выберите пункт отправления</MenuItem>
                         {
-                            addresses.map(address => (
+                            MyAddresses.map(address => (
                                 address1 === address
-                                ? address
-                                : <MenuItem key={address} value={address}>{address}</MenuItem>
+                                    ? address
+                                    : <MenuItem key={address} value={address}>{address}</MenuItem>
                             ))
                         }
                     </TextField>
                 </Grid>
                 <Grid item xs={12} className={`${classes.alignLeft} ${classes.fieldAlign}`}>
-                    <Button 
-                        variant="outlined" 
-                        color="primary" 
+                    <Button
+                        variant="outlined"
+                        color="primary"
                         component='button'
                         disabled={!address1 || !address2}
                         onClick={this.handleButtonClick}
@@ -130,16 +129,15 @@ class OrderForm extends Component {
     }
 }
 
-
 const mapStateToProps = state => ({
     isLoadingAddresses: getIsLoadingAddresses(state),
-    errorText: getErrorText(state),
-    addresses: getAddresses(state),
+    errorText: getLoadErrorText(state),
+    MyAddresses: getMyAddresses(state),
     isLoadingCoords: getIsLoadingCoords(state),
     errorCoords: getCoordsError(state)
 });
 
-const mapDispatchToProps = { fetchAddressesRequest, fetchCoordsRequest, setOrderComplete };
+const mapDispatchToProps = { fetchAddressesRequest, fetchCoordsRequest, setIsOrderMade };
 
 export default compose(
     connect(mapStateToProps, mapDispatchToProps),

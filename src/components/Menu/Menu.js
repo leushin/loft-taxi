@@ -6,24 +6,18 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import { logout, getIsAuthorized } from '../../modules/Auth';
-
-
-const styles = theme => ({
-    grow: {
-        flexGrow: 1,
-    }
-});
-
+import { logout } from '../../modules/Auth';
+import { getIsLoggedIn } from '../../modules/Auth';
+import styles from './MenuStyles';
 
 class Menu extends Component {
     handleLogout = () => {
         const { logout } = this.props;
-        logout(false)
-    }
+        logout(false);
+    };
 
-    render(){
-        const {isAuthorized, classes} = this.props;
+    render() {
+        const { isLoggedIn, classes } = this.props;
 
         return (
             <AppBar position='static' color='inherit'>
@@ -37,7 +31,7 @@ class Menu extends Component {
                         color='default' 
                         onClick={this.handleLogout}
                     >
-                        {isAuthorized ? 'Выйти' : 'Войти'}
+                        {isLoggedIn ? 'Выйти' : 'Войти'}
                     </Button>
                 </Toolbar>
             </AppBar>
@@ -46,9 +40,9 @@ class Menu extends Component {
 }
 
 const mapStateToProps = state => ({
-    isAuthorized: getIsAuthorized(state),
+    isLoggedIn: getIsLoggedIn(state),
 });
 
-const mapDispatchToProps = {logout};
+const mapDispatchToProps = { logout };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Menu));

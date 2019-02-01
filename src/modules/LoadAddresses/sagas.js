@@ -1,18 +1,20 @@
 import { put, call, takeEvery } from "redux-saga/effects";
-import { fetchAddressesRequest, fetchAddressesSuccess, fetchAddressesFailure } from './actions';
-import { loadAddressList } from './api';
+import { fetchAddressesRequest, fetchAddressesSuccess, fetchAddressesFailure}  from './actions';
+import { loadAddressList } from '../../modules/LoadAddresses/api';
 
 export function * fetchAddressesWorker(action) {
     try {
         const myAddresses = yield call(loadAddressList);
+
         return myAddresses;
     } catch (error){
-        return {error: error.message};
+        return { error: error.message };
     }
 }
 
 export function * saveAddressesWorker(action) {
     const {error, addresses} = yield call(fetchAddressesWorker);
+
     if (error) {
         yield put(fetchAddressesFailure(error));
     } else {

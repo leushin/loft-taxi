@@ -3,5 +3,5 @@ export const loadCoords = ({address1, address2}) => {
         method: 'GET',
         mode: 'cors'
     })
-    .then(response => response.json())
+        .then(response => response.json())
 };

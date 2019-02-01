@@ -1,19 +1,20 @@
 import { put, call, takeEvery } from "redux-saga/effects";
 import {fetchCoordsRequest, fetchCoordsSuccess, fetchCoordsFailure} from './actions';
-import { loadCoords } from './api';
+import { loadCoords } from '../../modules/Coords/api';
 
 export function * fetchCoordsWorker(action) {
     try {
         const coords = yield call(loadCoords, action.payload);
-        return {coords};
-    } catch (error) {
+        return { coords };
+    } catch (error){
         return {error: error.message};
     }
 }
 
 export function * saveCoordsWorker(action) {
     const {error, coords} = yield call(fetchCoordsWorker, action);
-    if(error){
+
+    if (error) {
         yield put(fetchCoordsFailure(error));
     } else {
         yield put(fetchCoordsSuccess(coords));

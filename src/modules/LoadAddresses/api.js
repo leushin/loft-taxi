@@ -3,5 +3,5 @@ export const loadAddressList = () => {
         method: 'GET',
         mode: 'cors'
     })
-    .then(response => response.json())
+        .then(response => response.json())
 };

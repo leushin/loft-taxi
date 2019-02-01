@@ -1,19 +1,29 @@
-import React from 'react';
+import React, { Component, Fragment } from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
-import LoginForm from '../LoginForm';
-import PrivateRoute from '../PrivateRoute';
-import Map from '../Map';
-import Profile from '../Profile';
-import Menu from '../Menu';
 
-export default () => (
-    <BrowserRouter>
-        <Menu />
-        <Switch>
-            <Route path='/login' exact component={LoginForm} />
-            <PrivateRoute path={'/map'} component={Map}/>
-            <PrivateRoute path={'/profile'} component={Profile}/>
-            <Redirect from='*' to='/login' />
-        </Switch>
-    </BrowserRouter>
-);
+import Header from '../Menu';
+import PrivateRoute from '../PrivateRoute';
+import LoginForm from '../LoginForm';
+import Map from '../Map';
+import ProfileForm from '../ProfileForm';
+
+
+class RootRouter extends Component {
+    render(){
+        return (
+            <BrowserRouter>
+                <Fragment>
+                    <Header/>
+                    <Switch>
+                        <Route path='/login' component={LoginForm}/>
+                        <Redirect path='/' exact to='login'/>
+                        <PrivateRoute path={`/map`} component={Map}/>
+                        <PrivateRoute path={`/profile`} component={ProfileForm}/>
+                    </Switch>
+                </Fragment>
+            </BrowserRouter>
+        )
+    }
+}
+
+export default RootRouter

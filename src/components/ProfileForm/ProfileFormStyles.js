@@ -9,7 +9,7 @@ const styles = theme => ({
 		alignItems: 'center',
 		padding: theme.spacing.unit * 3,
 	},
-	formColumn: {
+	formcolumn: {
 		display: 'flex',
 		flexDirection: 'column',
 		justifyContent: 'space-between',

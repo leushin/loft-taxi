@@ -1,20 +1,25 @@
 import { combineReducers } from 'redux';
-import { spawn } from 'redux-saga/effects';
 import { reducer as formReducer } from 'redux-form';
-import auth from './Auth';
-import map from './Map';
-import profile from './Profile';
-import addresses from './Addresses';
+import authReducer from './Auth';
+import loadAddressesReducer from './LoadAddresses';
+import coordsReducer from './Coords';
+
+import { spawn } from "redux-saga/effects";
 import { authWatcher } from './Auth/sagas';
-import { loadAddressesWatcher } from './Addresses/sagas';
-import { getCoordsWatcher } from './Map/sagas';
-//import {handleLocalStorageSaga} from './localStorageSaga';
+import { loadAddressesWatcher } from './LoadAddresses/sagas';
+import { getCoordsWatcher } from './Coords/sagas';
+import { handleLocalStorageSaga } from './localStorageSaga';
 
-export default combineReducers({ auth, map, profile, addresses, form: formReducer });
+export const rootSaga = function * rootSaga() {
+    yield spawn(authWatcher);
+    yield spawn(loadAddressesWatcher);
+    yield spawn(getCoordsWatcher);
+    yield spawn(handleLocalStorageSaga);
+};
 
-export function* rootSaga() {
-    yield spawn(authWatcher)
-    yield spawn(loadAddressesWatcher)
-    yield spawn(getCoordsWatcher)
-    //yield spawn(handleLocalStorageSaga)
-}
+export default combineReducers({
+    authReducer,
+    loadAddressesReducer,
+    coordsReducer,
+    form: formReducer
+});

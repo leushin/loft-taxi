@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -7,15 +6,15 @@ import styles from './OrderPopupStyles';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import { setOrderComplete } from '../../modules/Map'
+import { setIsOrderMade } from '../../modules/Coords';
 
 class OrderPopup extends Component {
     handleClick = () => {
-        const { setOrderComplete } = this.props;
-        setOrderComplete(false);
-    }
+        const { setIsOrderMade } = this.props;
+        setIsOrderMade(false)
+    };
 
-    render(){
+    render() {
         const { classes } = this.props;
 
         return (
@@ -35,9 +34,11 @@ class OrderPopup extends Component {
 }
 
 const mapStateToProps = state => state;
-const mapDispatchToProps = { setOrderComplete };
+
+const mapDispatchToProps = { setIsOrderMade };
 
 export default compose(
     connect(mapStateToProps, mapDispatchToProps),
     withStyles(styles),
 )(OrderPopup);
+

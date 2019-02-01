@@ -1,41 +1,22 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
+import { Field, reduxForm } from 'redux-form';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { login, getIsAuthorized } from '../../modules/Auth';
-import { testAuth } from '../../modules/Auth/actions';
-import { Field, reduxForm } from 'redux-form';
+import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import { renderTextField } from '../../helpers';
-import styles from './LoginFormStyles.js'
-import { withStyles } from '@material-ui/core/styles';
+import { login, testAuth, getIsLoggedIn } from '../../modules/Auth';
+import { renderTextField } from '../helpers';
+import styles from './LoginStyles';
 
-const validate = ({ username, password }) => {
-    const errors = {};
-    if (!username){
-        errors.username = 'Надо указать логин'
-    } else if(!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(username)){
-        errors.username = 'Тут нужен ваш e-mail'
-    };
-    if(!password) errors.password = 'Надо указать пароль';
-    return errors;
-};
+class LoginForm extends Component{
+    renderForm = () => {
+        const { classes, handleSubmit } = this.props;
 
-class LoginForm extends Component {
-    handleSubmit = (values) => {
-        const { testAuth } = this.props;
-        testAuth(values);
-    };
-
-    render () {
-        const { isAuthorized, classes, handleSubmit } = this.props;
-            
-        return isAuthorized ? (
-            <Redirect to='/map' />
-        ) : (
+        return(
             <Grid container spacing={0} className={classes.container} alignItems='center' justify='center'>
                 <Grid item xs={4} >
                     <Paper component='form' onSubmit={handleSubmit(this.handleSubmit)}>
@@ -45,22 +26,20 @@ class LoginForm extends Component {
                             </Grid>
                             <Grid item xs={12} className={`${classes.alignLeft} ${classes.fieldAlign}`}>
                                 <Field
-                                    name="username"
-                                    label="Имя пользователя *"
-                                    placeholder="Имя пользователя"
+                                    name="userName"
+                                    component={renderTextField}
+                                    label="Имя пользователя"
                                     type='text'
                                     fullWidth
-                                    component={renderTextField}
                                 />
                             </Grid>
                             <Grid item xs={12} className={`${classes.alignLeft} ${classes.fieldAlign}`}>
                                 <Field
-                                    name="password"
-                                    label="Пароль *"
-                                    placeholder="Пароль"
+                                    name="userPassword"
+                                    component={renderTextField}
+                                    label="Пароль"
                                     type='password'
                                     fullWidth
-                                    component={renderTextField}
                                 />
                             </Grid>
                             <Grid item xs={12} className={`${classes.alignLeft} ${classes.fieldAlign}`}>
@@ -70,12 +49,42 @@ class LoginForm extends Component {
                     </Paper>
                 </Grid>
             </Grid>
-        );
+        )
+    };
+
+    handleSubmit = values => {
+        const { userName: username, userPassword: password } = values;
+        const { testAuth } = this.props;
+        testAuth({ username, password })
+    };
+
+    render() {
+        const { isLoggedIn } = this.props;
+        return (
+            <Fragment>
+                {
+                    isLoggedIn
+                    ? <Redirect to='/map'/>
+                    : this.renderForm()
+                }
+            </Fragment>
+        )
     }
 }
 
+const loginSyncValidator = values => {
+    const errors = {};
+    if(!values.userName) {
+        errors.userName = 'Надо указать логин'
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.userName)){
+        errors.userName = 'Тут нужен ваш e-mail'
+    };
+    if (!values.userPassword) errors.userPassword = 'Надо указать пароль';
+    return errors;
+};
+
 const mapStateToProps = state => ({
-    isAuthorized: getIsAuthorized(state),
+    isLoggedIn: getIsLoggedIn(state),
 });
 
 const mapDispatchToProps = { login, testAuth };
@@ -83,5 +92,5 @@ const mapDispatchToProps = { login, testAuth };
 export default compose(
     connect(mapStateToProps, mapDispatchToProps),
     withStyles(styles),
-    reduxForm({ form: 'loginForm', validate })
+    reduxForm({ form: 'loginform', validate: loginSyncValidator })
 )(LoginForm);

@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
 import { handleActions } from 'redux-actions';
-import { fetchAddressesRequest, fetchAddressesSuccess, fetchAddressesFailure } from './actions';
+import { fetchAddressesRequest,	fetchAddressesSuccess, fetchAddressesFailure } from './actions';
 
-const adresses = handleActions({
-	[fetchAddressesSuccess]: () => (_state, action) => action.payload,
+const myAddresses = handleActions({
+	[fetchAddressesSuccess]: (_state, action) => action.payload,
 }, []);
 
 const isLoadingAddresses = handleActions({
@@ -18,11 +18,12 @@ const error = handleActions({
 }, null);
 
 const errorText = handleActions({
+	[fetchAddressesSuccess]: () => null,
     [fetchAddressesFailure]: () => 'Ошибка загрузки',
 }, null);
 
 export default combineReducers({
-	adresses,
+	myAddresses,
 	isLoadingAddresses,
     error,
     errorText
